@@ -1,10 +1,17 @@
 // "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=0&longitude=0"
 
-import { useState } from "react";
-import Button from './Button';
-
-import styles from "./Form.module.css";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import styles from "./Form.module.css";
+import Button from './Button';
+import { useUrlPosition } from "../hooks/useUrlPosition";
+import Spinner from './Spinner';
+import Message from './Message';
+import { useCities } from "../contexts/CitiesContext";
+
+const BASE_URL=`https://api.bigdatacloud.net/data/reverse-geocode-client`;
 
 export function convertToEmoji(countryCode) {
   const codePoints = countryCode
@@ -16,13 +23,64 @@ export function convertToEmoji(countryCode) {
 
 function Form() {
   const navigate=useNavigate();
+  const {createCity,isLoading}=useCities();
+  const [lat,lng]=useUrlPosition();
   const [cityName, setCityName] = useState("");
   const [country, setCountry] = useState("");
   const [date, setDate] = useState(new Date());
   const [notes, setNotes] = useState("");
+  const [isLoadingGeocoding,setIsLoadingGeocoding]=useState(false);
+  const [errorGeocoding,setErrorGeocoding]=useState('');
+  const [emoji,setEmoji]=useState('');
+
+  useEffect(function(){
+    async function fetchCityData(){
+      if(!lat&!lng) return;
+      try{
+        setIsLoadingGeocoding(true);
+        setErrorGeocoding('');
+        const response= await fetch(`${BASE_URL}?latitude=${lat}&longitude=${lng}`);
+        const data= await response.json();
+        if(!data.countryCode) throw new Error("That doesn't seem like a city, click on a city next time 😉")
+        setCityName(data.city || data.locality || '');
+        setCountry(data.countryName);
+        setEmoji(convertToEmoji(data.countryCode));
+      }catch(err){
+        setErrorGeocoding(err.message);
+      }finally{
+        setIsLoadingGeocoding(false);
+      }
+    }
+    fetchCityData();
+  },[lat,lng]);
+
+  async function handleSubmit(e){
+    e.preventDefault() //to prevent refresh
+    if(!cityName || !date) return;
+
+    // id in newCity is going to be taken care of by json-server, so need not to be included.
+    const newCity={
+      country,
+      cityName,
+      notes,
+      date,
+      emoji,
+      position:{lat,lng}
+    }
+
+    await createCity(newCity);
+    navigate('/app/cities');
+  }
+
+  if(isLoadingGeocoding) return <Spinner/>;
+
+  // This is for /app/form without the lat and lng values. No need to display the form.
+  if(!lat&!lng) return <Message message='Start by clicking somewhere on the map 🗺️'/>
+
+  if(errorGeocoding) return <Message message={errorGeocoding} />;
 
   return (
-    <form className={styles.form}>
+    <form className={`${styles.form} ${isLoading ? styles.loading : ''}`} onSubmit={handleSubmit}>
       <div className={styles.row}>
         <label htmlFor="cityName">City name</label>
         <input
@@ -30,16 +88,12 @@ function Form() {
           onChange={(e) => setCityName(e.target.value)}
           value={cityName}
         />
-        {/* <span className={styles.flag}>{emoji}</span> */}
+        <span className={styles.flag}>{emoji}</span>
       </div>
 
       <div className={styles.row}>
         <label htmlFor="date">When did you go to {cityName}?</label>
-        <input
-          id="date"
-          onChange={(e) => setDate(e.target.value)}
-          value={date}
-        />
+        <DatePicker onChange={date=>setDate(date)} selected={date} id='date' />
       </div>
 
       <div className={styles.row}>
@@ -53,7 +107,9 @@ function Form() {
 
       <div className={styles.buttons}>
         <Button type='primary'>Add</Button>
-        <Button type='back' onClick={(e)=>{e.preventDefault(); navigate(-1)}}>&larr; Back</Button>
+        {/* prevent form layers to stack in history '..' is used instead of '-1' */}
+        {/* using prevent default here in back btn because we don't want this to submit the form. */}
+        <Button type='back' onClick={(e)=>{e.preventDefault(); navigate('..')}}>&larr; Back</Button>
       </div>
     </form>
   );

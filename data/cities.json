@@ -35,6 +35,78 @@
         "lng": 13.376933665713324
       },
       "id": 98443197
+    },
+    {
+      "country": "India",
+      "cityName": "Bharno",
+      "notes": "Amazing place. ",
+      "date": "2023-08-18T16:10:31.359Z",
+      "emoji": "🇮🇳",
+      "position": {
+        "lat": "23.160563309048314",
+        "lng": "84.85839843750001"
+      },
+      "id": 98443198
+    },
+    {
+      "country": "India",
+      "cityName": "Karjat",
+      "notes": "Interesting place to be.",
+      "date": "2023-08-18T16:19:53.932Z",
+      "emoji": "🇮🇳",
+      "position": {
+        "lat": "18.47960905583198",
+        "lng": "74.79492187500001"
+      },
+      "id": 98443199
+    },
+    {
+      "country": "India",
+      "cityName": "Kwate tu Kwage",
+      "notes": "Tribes we wildin",
+      "date": "2023-08-18T16:20:45.341Z",
+      "emoji": "🇮🇳",
+      "position": {
+        "lat": "10.655209552534227",
+        "lng": "92.53784179687501"
+      },
+      "id": 98443200
+    },
+    {
+      "country": "Thailand",
+      "cityName": "Khwao Sinarin",
+      "notes": "Nice food",
+      "date": "2023-08-18T16:21:27.646Z",
+      "emoji": "🇹🇭",
+      "position": {
+        "lat": "14.987239525774259",
+        "lng": "103.62304687500001"
+      },
+      "id": 98443201
+    },
+    {
+      "country": "Indonesia",
+      "cityName": "Batam",
+      "notes": "Met lots of interesting people here.",
+      "date": "2023-08-18T16:24:56.331Z",
+      "emoji": "🇮🇩",
+      "position": {
+        "lat": "1.0106897682409128",
+        "lng": "104.01855468750001"
+      },
+      "id": 98443202
+    },
+    {
+      "country": "Indonesia",
+      "cityName": "Gunungputri",
+      "notes": "Fun fun fun.",
+      "date": "2023-08-18T16:27:47.953Z",
+      "emoji": "🇮🇩",
+      "position": {
+        "lat": "-6.424483546180726",
+        "lng": "106.91894531250001"
+      },
+      "id": 98443203
     }
   ]
 }
