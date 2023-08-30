@@ -21,7 +21,6 @@ export default function Map(){
   const [mapLat,mapLng]=useUrlPosition();
   
 
-  // Needed to persist the location after user hit back button in <City/>. So, storing that in mapPosition. Hence the need for mapLocation.
   useEffect(function(){
     if(mapLat&&mapLng)
     setMapPosition([mapLat,mapLng]);
@@ -44,7 +43,6 @@ export default function Map(){
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
         />
-        {/* Looping over the cities to mark location on the map. */}
         {cities.map(city=>{
           return (
           <Marker position={[city.position.lat,city.position.lng]} key={city.id}>
@@ -53,7 +51,6 @@ export default function Map(){
             </Popup>
           </Marker>);
         })}
-        {/* Need to create a component to change the center value. Center is not reactive to mapLocation change. */}
         <ChangeCenter position={mapPosition}/>
         <DetectClick/>
       </MapContainer>
@@ -63,12 +60,10 @@ export default function Map(){
 
 function ChangeCenter({position}){
  const map= useMap();
-//  setting the center for the map. Even if user hits back btn the mapLocation will persist.
  map.setView(position);
  return null;
 }
 
-// TO detect click on map. Upon click navigating to form but also storing the lat and lng in the url for the form to use.
 function DetectClick(){
   const navigate=useNavigate();
   useMapEvents({
