@@ -55,7 +55,7 @@ function Form() {
   },[lat,lng]);
 
   async function handleSubmit(e){
-    e.preventDefault() //to prevent refresh
+    e.preventDefault() 
     if(!cityName || !date) return;
 
     // id in newCity is going to be taken care of by json-server, so need not to be included.
@@ -74,7 +74,6 @@ function Form() {
 
   if(isLoadingGeocoding) return <Spinner/>;
 
-  // This is for /app/form without the lat and lng values. No need to display the form.
   if(!lat&!lng) return <Message message='Start by clicking somewhere on the map 🗺️'/>
 
   if(errorGeocoding) return <Message message={errorGeocoding} />;
@@ -107,8 +106,7 @@ function Form() {
 
       <div className={styles.buttons}>
         <Button type='primary'>Add</Button>
-        {/* prevent form layers to stack in history '..' is used instead of '-1' */}
-        {/* using prevent default here in back btn because we don't want this to submit the form. */}
+        
         <Button type='back' onClick={(e)=>{e.preventDefault(); navigate('..')}}>&larr; Back</Button>
       </div>
     </form>
